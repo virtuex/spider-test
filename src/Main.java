@@ -1,4 +1,5 @@
 import com.alibaba.fastjson.JSONObject;
+import org.virtue.DbOpFactory;
 import org.virtue.load.DataLoadUtil;
 import org.virtue.load.DateUtil;
 import org.virtue.load.JsonUtil;
@@ -18,6 +19,8 @@ public class Main {
         //registrationTime  申请登记日期
         //publicityTime  公示日期
         //trustTremType 存续期限
+        DbOpFactory instance = DbOpFactory.getInstance();
+        instance.init();
         List<Product> products = new ArrayList<>();
         int sum=1;
         String response = HttpUtil.getResponse(indexPage+ DataLoadUtil.getParam(1));
@@ -63,10 +66,11 @@ public class Main {
                 product.setWealthOpTyle((String) map.get("trustUseApplicationDesc"));
                 System.out.println("第"+sum+"条数据爬去成功"+product);
                 sum++;
+                instance.insert(product);
                 products.add(product);
             }
         }
-        System.out.println(products);
+        instance.close();
 
     }
 }
